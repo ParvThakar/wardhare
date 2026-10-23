@@ -1,4 +1,5 @@
 {
+  "name": "wardhare",
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "cleanUrls": true,
