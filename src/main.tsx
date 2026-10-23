@@ -1,4 +1,4 @@
-import React, { StrictMode, useMemo, useState, useRef } from 'react';
+import React, { StrictMode, useMemo, useState, useRef, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   animated,
@@ -16,6 +16,11 @@ import { GradientWave } from './components/ui/gradient-wave';
 import { BentoCard, BentoGrid } from './components/ui/bento-grid';
 import { TiltedCard } from './components/ui/tilted-card';
 import { GooeyNav } from './components/ui/gooey-nav';
+import { Hardware3DViewer } from './components/ui/hardware-3d-viewer';
+import { EnhancedEducationalInspector } from './components/ui/educational-inspector';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './styles.css';
 
 // Flow Data for Interactive Signal Pathways & Topology
@@ -828,11 +833,36 @@ function App() {
   const [modal, setModal] = useState<Part | null>(null);
   const [quiz, setQuiz] = useState(-1);
   const [score, setScore] = useState(0);
-  const [explorerMode, setExplorerMode] = useState<'bench' | 'exploded'>('exploded');
+  const [explorerMode, setExplorerMode] = useState<'3d' | 'exploded' | 'bench'>('3d');
   const [activeFlow, setActiveFlow] = useState<FlowKey>('power');
 
   // React-Spring: Scroll progress microanimation
   const { scrollYProgress } = useScroll();
+
+  // Lenis Smooth Scroll + GSAP ScrollTrigger Integration
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+    });
+
+    gsap.registerPlugin(ScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(updateLenis);
+      lenis.destroy();
+    };
+  }, []);
 
   // Filtered hardware cards
   const results = useMemo(
@@ -1008,7 +1038,21 @@ function App() {
               <span className="eyebrow">01 / INTERACTIVE ARCHITECTURE</span>
               <h2>Inside the machine</h2>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <SpringButton
+                onClick={() => setExplorerMode('3d')}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--line)',
+                  background: explorerMode === '3d' ? 'var(--cyan)' : 'transparent',
+                  color: explorerMode === '3d' ? '#061015' : 'var(--dim)',
+                  cursor: 'pointer',
+                  font: "600 11px 'DM Mono'",
+                }}
+              >
+                🌐 3D Interactive Lab
+              </SpringButton>
               <SpringButton
                 onClick={() => setExplorerMode('exploded')}
                 style={{
@@ -1043,7 +1087,15 @@ function App() {
           <div className="bench">
             {/* Left Column: Explorer Stage */}
             <div className="scene" style={{ padding: 0, overflow: 'hidden' }}>
-              {explorerMode === 'exploded' ? (
+              {explorerMode === '3d' ? (
+                <Hardware3DViewer
+                  selectedId={selected.id}
+                  onSelectPart={(id) => {
+                    const found = parts.find((p) => p.id === id);
+                    if (found) setSelected(found);
+                  }}
+                />
+              ) : explorerMode === 'exploded' ? (
                 <ReactSpringExplodedStudio
                   selectedId={selected.id}
                   onSelectPart={(id) => {
@@ -1096,7 +1148,7 @@ function App() {
 
               {inspectorTransitions((style, item) => (
                 <animated.div style={style}>
-                  <SpringDetail part={item} />
+                  <EnhancedEducationalInspector part={item} />
                 </animated.div>
               ))}
             </aside>
@@ -1447,13 +1499,13 @@ function App() {
             <div className="modal" onClick={() => setModal(null)}>
               <animated.div
                 className="modal-card"
-                style={style}
+                style={{ ...style, maxWidth: '780px', width: '92%' }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button onClick={() => setModal(null)} aria-label="Close modal">
                   ×
                 </button>
-                <SpringDetail part={item} />
+                <EnhancedEducationalInspector part={item} />
               </animated.div>
             </div>
           )
