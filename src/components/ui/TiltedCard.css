@@ -154,11 +154,12 @@
   margin: 16px 0 0 14px;
   padding: 5px 9px;
   border-radius: 7px;
-  background: #ffffff;
+  background: rgba(14, 29, 37, 0.95);
+  border: 1px solid rgba(88, 229, 238, 0.25);
   box-shadow:
     0 0 0 1px rgba(24, 24, 27, 0.08),
     0 8px 18px -8px rgba(0, 0, 0, 0.45);
-  color: #18181b;
+  color: #58e5ee;
   font-size: 12px;
   font-weight: 500;
   line-height: 16px;

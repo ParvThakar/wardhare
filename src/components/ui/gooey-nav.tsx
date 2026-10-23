@@ -300,10 +300,11 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
     if (!stage || !canvas || !list || !overlay || !fallback) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const gl = canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: false });
-    const pipeline = gl ? build(gl) : null;
-    fallback.style.display = pipeline ? 'none' : 'block';
-    canvas.style.display = pipeline ? 'block' : 'none';
+    // Disable WebGL canvas to avoid multi-context GPU conflicts and white compositor glitch
+    const gl = null;
+    const pipeline = null;
+    fallback.style.display = 'block';
+    canvas.style.display = 'none';
 
     const view = { width: 0, height: 0 };
     let rects: { x: number; y: number; w: number; h: number }[] = [];
@@ -674,32 +675,18 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
       state.mass = 1;
       state.scale = 1;
       state.velocity = 0;
+      const box = shape(index, 1);
+      if (box && fallback) {
+        fallback.style.transform = `translate(${box.x.toFixed(2)}px, ${box.y.toFixed(2)}px)`;
+        fallback.style.width = `${box.w}px`;
+        fallback.style.height = `${box.h}px`;
+        fallback.style.opacity = '1';
+      }
       render();
     };
 
     const go = (index: number, animate: boolean) => {
-      if (index === target) return;
-      if (!rects[index] || !animate || reduced || target < 0) {
-        settle(index);
-        return;
-      }
-      const now = performance.now();
-      target = index;
-      pill(index);
-      for (const drop of drops) {
-        drop.index = index;
-        if (drop.state === 'flying') plan(drop, index, now, false);
-        if (drop.state === 'absorbing') {
-          drop.state = 'flying';
-          drop.mass *= 1 - drop.absorbed;
-          drop.absorbed = 0;
-          plan(drop, index, now, false);
-        }
-      }
-      for (const from of [...pills.keys()]) {
-        if (from !== index) emit(from, index, now);
-      }
-      wake();
+      settle(index);
     };
 
     const onOver = (event: MouseEvent) => {

@@ -30,10 +30,9 @@
 .gooey-nav--framed {
   padding: var(--gn-pad);
   border-radius: 999px;
-  background: var(--gn-frame);
-  box-shadow: var(--gn-frame-shadow);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  backdrop-filter: blur(20px) saturate(1.6);
+  background: rgba(14, 29, 37, 0.85);
+  border: 1px solid rgba(88, 229, 238, 0.18);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .gooey-nav__stage {
@@ -42,20 +41,20 @@
 }
 
 .gooey-nav__canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+  display: none !important;
 }
 
 .gooey-nav__fallback {
   position: absolute;
   top: 0;
   left: 0;
-  display: none;
+  display: block;
+  z-index: 1;
   border-radius: 999px;
-  background: var(--gn-pill);
+  background: var(--gn-pill, #58e5ee);
+  box-shadow: 0 0 16px rgba(88, 229, 238, 0.45);
   pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), width 0.22s ease, height 0.22s ease, opacity 0.2s ease;
 }
 
 .gooey-nav__list {
@@ -69,12 +68,7 @@
 }
 
 .gooey-nav__list--active {
-  position: absolute;
-  inset: 0;
-  color: var(--gn-active-ink);
-  visibility: hidden;
-  clip-path: inset(100%);
-  pointer-events: none;
+  display: none !important;
 }
 
 .gooey-nav__item {
@@ -82,6 +76,8 @@
 }
 
 .gooey-nav__link {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -104,7 +100,8 @@
 }
 
 .gooey-nav__item[data-active] .gooey-nav__link {
-  color: var(--gn-ink);
+  color: #061015 !important;
+  font-weight: 700;
 }
 
 .gooey-nav__link:focus-visible {
