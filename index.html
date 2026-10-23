@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    if (window.location.pathname === '/' || window.location.pathname.endsWith('/index.html')) {
+      window.location.replace('/app.html' + window.location.search + window.location.hash);
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>wardhare — Interactive PC Hardware Architecture & Guide</title>
+  <meta name="description" content="Explore modern PC hardware architecture with interactive exploded schematics, searchable hardware specs, connection flows, and systematic troubleshooting." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Category Badges Styling */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      border: 1px solid transparent;
+      vertical-align: middle;
+    }
+
+    .badge-icon {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .badge-label {
+      font-size: 10px;
+    }
+
+    /* Category Specific Colors */
+    .badge-CPU {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .badge-GPU {
+      background: rgba(251, 146, 60, 0.15);
+      color: #fb923c;
+      border-color: rgba(251, 146, 60, 0.4);
+    }
+
+    .badge-RAM {
+      background: rgba(216, 180, 254, 0.15);
+      color: #d8b4fe;
+      border-color: rgba(216, 180, 254, 0.4);
+    }
+
+    .badge-Storage {
+      background: rgba(244, 114, 182, 0.15);
+      color: #f472b6;
+      border-color: rgba(244, 114, 182, 0.4);
+    }
+
+    .badge-Motherboard {
+      background: rgba(52, 211, 153, 0.15);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.4);
+    }
+
+    .badge-PSU {
+      background: rgba(253, 224, 71, 0.15);
+      color: #fde047;
+      border-color: rgba(253, 224, 71, 0.4);
+    }
+
+    .badge-Cooling {
+      background: rgba(6, 182, 212, 0.15);
+      color: #22d3ee;
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .badge-Connectivity,
+    .badge-Cable {
+      background: rgba(249, 115, 22, 0.15);
+      color: #fb923c;
+      border-color: rgba(249, 115, 22, 0.4);
+    }
+
+    /* Color Legend Component */
+    .legend-container {
+      margin-top: 14px;
+      background: rgba(6, 9, 16, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md, 10px);
+      padding: 10px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .legend-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim, #8b9cb3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-right: 4px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted, #b0bfd4);
+      cursor: default;
+    }
+
+    .legend-swatch {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 6px currentColor;
+    }
+  </style>
+</head>
+<body>
+  <!-- =========================================================================
+       Navigation Header
+       ========================================================================= -->
+  <header class="navbar" id="top">
+    <div class="nav-container">
+      <a href="#top" class="brand-logo" aria-label="wardhare homepage">
+        <span class="logo-icon">⚡</span>
+        <span>ward<span class="highlight">hare</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#diagram">Interactive Diagram</a>
+        <a href="#library">Hardware Library</a>
+        <a href="#connections">Wiring &amp; Flows</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#diagram" class="btn btn-primary btn-sm">Explore Rig</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================================
+         1. Hero Section
+         ========================================================================= -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-glow" aria-hidden="true"></div>
+      
+      <div class="hero-container">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>PC System Architecture &amp; Field Guide</span>
+        </div>
+
+        <h1 class="hero-title">
+          Master the Anatomy of <br />
+          <span class="gradient-text">Modern Computer Hardware</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          An interactive engineering manual for desktop PC architecture. Inspect components in assembled or exploded 3D schematic views, trace high-speed data buses, and diagnose boot failures with systematic precision.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#diagram" class="btn btn-primary btn-lg">
+            <span>🔬 Open Interactive Diagram</span>
+          </a>
+          <a href="#library" class="btn btn-secondary btn-lg">
+            <span>📚 Browse Hardware Library</span>
+          </a>
+          <a href="#troubleshooting" class="btn btn-outline btn-lg">
+            <span>🚨 Diagnostic Checklist</span>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Interactive SVG Engine</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">PCIe 5.0</span>
+            <span class="stat-label">Bus Architecture</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">DDR5</span>
+            <span class="stat-label">Dual-Channel Memory</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">ATX 3.1</span>
+            <span class="stat-label">Power Delivery Standard</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         2. Interactive PC Diagram Section
+         ========================================================================= -->
+    <section class="section" id="diagram">
+      <div class="section-header">
+        <span class="section-tag">Interactive Architecture</span>
+        <h2 class="section-title">Inside the Machine</h2>
+        <p class="section-desc">
+          Click or focus any hardware component in the schematic or use quick chips to inspect specifications, motherboard trace routing, power connections, and common diagnostics.
+        </p>
+      </div>
+
+      <div class="diagram-viewport-wrapper">
+        <div class="diagram-controls">
+          <div class="view-switch-group" role="group" aria-label="Diagram Perspective View">
+            <button id="btn-assembled" class="btn-toggle active" type="button" aria-pressed="true">
+              <span>🏢</span>
+              <span>Assembled Tower</span>
+            </button>
+            <button id="btn-exploded" class="btn-toggle" type="button" aria-pressed="false">
+              <span>💥</span>
+              <span>Exploded View</span>
+            </button>
+            <a href="Inside the Machine - PC Components Explorer.html" class="btn-toggle" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;" target="_blank" title="Open full studio hardware explorer">
+              <span>🔬</span>
+              <span>Studio Hardware Explorer ↗</span>
+            </a>
+            <a href="app.html" class="btn-toggle" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background: rgba(88, 229, 238, 0.15); border-color: rgba(88, 229, 238, 0.5); color: #58e5ee;" title="Open React Spring Hardware Studio">
+              <span>⚛️</span>
+              <span>React-Spring Studio ↗</span>
+            </a>
+          </div>
+
+          <div class="diagram-hint">
+            <span>💡 Click any component below to inspect architectural details</span>
+          </div>
+        </div>
+
+        <div class="diagram-layout">
+          <!-- Left: Schematic SVG Stage -->
+          <div class="diagram-stage-card">
+            <div class="stage-header">
+              <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <span class="stage-title">SYSTEM SCHEMATIC // 860 × 640 VIEWPORT</span>
+              <span id="view-indicator-badge" class="current-view-badge">MODE: ASSEMBLED TOWER</span>
+            </div>
+
+            <div class="diagram-canvas-container">
+              <svg viewBox="0 0 860 640" id="pc-svg" class="pc-schematic assembled" aria-label="Desktop Computer Schematic Diagram">
+                <defs>
+                  <!-- Base Gradients -->
+                  <linearGradient id="pcb" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0d423a"/>
+                    <stop offset="100%" stop-color="#061f1a"/>
+                  </linearGradient>
+                  <linearGradient id="aluminum" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#cbd5e1"/>
+                    <stop offset="50%" stop-color="#94a3b8"/>
+                    <stop offset="100%" stop-color="#475569"/>
+                  </linearGradient>
+                  <linearGradient id="fin-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#64748b"/>
+                    <stop offset="25%" stop-color="#94a3b8"/>
+                    <stop offset="50%" stop-color="#e2e8f0"/>
+                    <stop offset="75%" stop-color="#94a3b8"/>
+                    <stop offset="100%" stop-color="#475569"/>
+                  </linearGradient>
+                  <linearGradient id="black" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#1e293b"/>
+                    <stop offset="100%" stop-color="#0f172a"/>
+                  </linearGradient>
+                  <linearGradient id="drive-bezel" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#334155"/>
+                    <stop offset="100%" stop-color="#0f172a"/>
+                  </linearGradient>
+                  <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#fbbf24"/>
+                    <stop offset="100%" stop-color="#d97706"/>
+                  </linearGradient>
+                  <linearGradient id="copper" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#b45309"/>
+                    <stop offset="40%" stop-color="#f59e0b"/>
+                    <stop offset="70%" stop-color="#fbbf24"/>
+                    <stop offset="100%" stop-color="#92400e"/>
+                  </linearGradient>
+                  <linearGradient id="rgb" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ef4444"/>
+                    <stop offset="25%" stop-color="#f59e0b"/>
+                    <stop offset="50%" stop-color="#10b981"/>
+                    <stop offset="75%" stop-color="#3b82f6"/>
+                    <stop offset="100%" stop-color="#a855f7"/>
+                  </linearGradient>
+                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                  </filter>
+                  <style>
+                    .fan-spin { transform-origin: center; animation: spin-cw 4s linear infinite; }
+                    .fan-spin-rev { transform-origin: center; animation: spin-ccw 4s linear infinite; }
+                    @keyframes spin-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                    @keyframes spin-ccw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+                  </style>
+                </defs>
+
+                <!-- Projection Guides (Visible in exploded view) -->
+                <g class="projection-lines" stroke="#38bdf8" stroke-dasharray="4,4" stroke-width="1.2" opacity="0.4" pointer-events="none">
+                  <line x1="410" y1="150" x2="380" y2="90" />
+                  <line x1="290" y1="310" x2="325" y2="255" />
+                  <line x1="520" y1="440" x2="475" y2="500" />
+                  <line x1="690" y1="250" x2="740" y2="230" />
+                  <line x1="320" y1="530" x2="300" y2="575" />
+                </g>
+
+                <!-- Motherboard -->
+                <g id="comp-motherboard" class="component-group part" tabindex="0" data-component-id="motherboard" role="button" aria-label="Motherboard">
+                  <rect class="comp-box" x="200" y="120" width="460" height="400" rx="8" fill="url(#pcb)" stroke="#34d399" stroke-width="2"/>
+                  <g stroke="#14b8a6" stroke-width="1" opacity="0.45">
+                    <line x1="210" y1="130" x2="650" y2="130"/>
+                    <line x1="210" y1="150" x2="650" y2="150"/>
+                    <line x1="210" y1="510" x2="650" y2="510"/>
+                    <line x1="210" y1="530" x2="650" y2="530"/>
+                  </g>
+                  <!-- CPU Socket Area -->
+                  <rect x="370" y="150" width="80" height="60" rx="4" fill="url(#black)" stroke="#38bdf8" stroke-width="1"/>
+                  <circle cx="410" cy="160" r="3" fill="#38bdf8"/>
+                  <circle cx="470" cy="160" r="3" fill="#38bdf8"/>
+                  <circle cx="410" cy="200" r="3" fill="#38bdf8"/>
+                  <circle cx="470" cy="200" r="3" fill="#38bdf8"/>
+                  <!-- VRM Heatsinks -->
+                  <rect x="360" y="220" width="100" height="40" rx="2" fill="url(#black)" stroke="#94a3b8"/>
+                  <line x1="370" y1="230" x2="450" y2="230" stroke="#94a3b8"/>
+                  <line x1="370" y1="240" x2="450" y2="240" stroke="#94a3b8"/>
+                  <!-- DIMM Slot outlines -->
+                  <rect x="250" y="250" width="80" height="120" rx="4" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="260" y="260" width="60" height="40" rx="2" fill="url(#rgb)"/>
+                  <!-- Chipset & PCIe slot traces -->
+                  <rect x="250" y="390" width="120" height="100" rx="4" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="260" y="400" width="100" height="20" fill="url(#gold)"/>
+                  <rect x="450" y="390" width="120" height="80" rx="4" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="460" y="400" width="100" height="40" fill="#3b82f6"/>
+                  <rect x="250" y="500" width="120" height="20" rx="2" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="620" y="500" width="80" height="60" rx="4" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="630" y="510" width="60" height="40" fill="url(#gold)"/>
+                  <!-- Rear I/O shield -->
+                  <rect x="650" y="180" width="100" height="140" rx="8" fill="url(#black)" stroke="#94a3b8"/>
+                  <rect x="660" y="190" width="80" height="60" rx="4" fill="url(#copper)"/>
+                  <rect x="660" y="260" width="80" height="60" rx="4" fill="url(#copper)"/>
+                </g>
+
+                <!-- CPU -->
+                <g id="comp-cpu" class="component-group part" tabindex="0" data-component-id="cpu" role="button" aria-label="Central Processing Unit">
+                  <rect class="comp-box" x="380" y="130" width="60" height="40" rx="4" fill="url(#aluminum)" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="378" y="170" width="64" height="10" fill="#2a2a2a" stroke="#38bdf8" stroke-width="1"/>
+                  <polygon points="380,130 400,130 400,150" fill="#38bdf8"/>
+                  <text x="410" y="155" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">CPU</text>
+                </g>
+
+                <!-- RAM -->
+                <g id="comp-ram" class="component-group part" tabindex="0" data-component-id="ram" role="button" aria-label="Random Access Memory">
+                  <rect class="comp-box" x="250" y="240" width="80" height="140" rx="4" fill="url(#black)" stroke="#d8b4fe" stroke-width="2"/>
+                  <rect x="260" y="250" width="60" height="30" rx="2" fill="url(#rgb)"/>
+                  <rect x="260" y="290" width="60" height="40" rx="2" fill="#2a2a2a"/>
+                  <rect x="260" y="340" width="60" height="10" fill="url(#gold)"/>
+                  <text x="290" y="315" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#d8b4fe" text-anchor="middle">DDR5</text>
+                </g>
+
+                <!-- GPU -->
+                <g id="comp-gpu" class="component-group part" tabindex="0" data-component-id="gpu" role="button" aria-label="Graphics Processing Unit">
+                  <rect class="comp-box" x="450" y="380" width="140" height="120" rx="8" fill="url(#black)" stroke="#fb923c" stroke-width="2"/>
+                  <!-- GPU Triple Fan array -->
+                  <g class="fan-spin gpu-fan" style="transform-origin: 480px 420px;">
+                    <circle cx="480" cy="420" r="22" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    <g transform="translate(480,420)">
+                      <path d="M0,-16 Q4,-12 0,-8 Q-4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M16,0 Q12,4 8,0 Q4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M0,16 Q-4,12 0,8 Q4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M-16,0 Q-12,-4 -8,0 Q-4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <circle cx="0" cy="0" r="4" fill="#fb923c"/>
+                    </g>
+                  </g>
+                  <g class="fan-spin gpu-fan" style="transform-origin: 520px 420px;">
+                    <circle cx="520" cy="420" r="22" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    <g transform="translate(520,420)">
+                      <path d="M0,-16 Q4,-12 0,-8 Q-4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M16,0 Q12,4 8,0 Q4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M0,16 Q-4,12 0,8 Q4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M-16,0 Q-12,-4 -8,0 Q-4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <circle cx="0" cy="0" r="4" fill="#fb923c"/>
+                    </g>
+                  </g>
+                  <g class="fan-spin gpu-fan" style="transform-origin: 560px 420px;">
+                    <circle cx="560" cy="420" r="22" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    <g transform="translate(560,420)">
+                      <path d="M0,-16 Q4,-12 0,-8 Q-4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M16,0 Q12,4 8,0 Q4,-4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M0,16 Q-4,12 0,8 Q4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <path d="M-16,0 Q-12,-4 -8,0 Q-4,4 0,0" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <circle cx="0" cy="0" r="4" fill="#fb923c"/>
+                    </g>
+                  </g>
+                  <rect x="450" y="500" width="140" height="8" fill="url(#rgb)"/>
+                  <rect x="450" y="508" width="140" height="8" fill="url(#gold)"/>
+                  <text x="520" y="475" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#fb923c" text-anchor="middle">RTX PCIe x16</text>
+                </g>
+
+                <!-- Storage (M.2 NVMe & SATA SSD) -->
+                <g id="comp-storage" class="component-group part" tabindex="0" data-component-id="storage" role="button" aria-label="Storage Subsystem">
+                  <!-- M.2 NVMe -->
+                  <rect class="comp-box" x="650" y="180" width="80" height="140" rx="4" fill="#064e3b" stroke="#f472b6" stroke-width="2"/>
+                  <rect x="660" y="250" width="60" height="30" fill="url(#aluminum)"/>
+                  <rect x="660" y="290" width="60" height="10" fill="url(#gold)"/>
+                  <text x="690" y="235" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#f472b6" text-anchor="middle">M.2 NVMe</text>
+                  <!-- 2.5 SATA SSD -->
+                  <rect x="650" y="490" width="100" height="70" rx="4" fill="url(#aluminum)" stroke="#f472b6" stroke-width="1.5"/>
+                  <rect x="660" y="500" width="80" height="40" rx="2" fill="#1e293b"/>
+                  <line x1="660" y1="500" x2="740" y2="500" stroke="#f472b6" stroke-width="2"/>
+                  <rect x="660" y="550" width="80" height="8" fill="url(#gold)"/>
+                  <text x="700" y="525" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">SATA SSD</text>
+                </g>
+
+                <!-- Power Supply Unit (PSU) -->
+                <g id="comp-psu" class="component-group part" tabindex="0" data-component-id="psu" role="button" aria-label="Power Supply Unit">
+                  <rect class="comp-box" x="250" y="480" width="140" height="100" rx="8" fill="url(#black)" stroke="#fde047" stroke-width="2"/>
+                  <circle cx="320" cy="530" r="30" fill="none" stroke="#fde047" stroke-width="2"/>
+                  <circle cx="320" cy="530" r="20" fill="none" stroke="#fde047" stroke-width="2"/>
+                  <line x1="320" y1="500" x2="320" y2="560" stroke="#fde047" stroke-width="1.5"/>
+                  <line x1="290" y1="530" x2="350" y2="530" stroke="#fde047" stroke-width="1.5"/>
+                  <text x="320" y="495" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#fde047" text-anchor="middle">850W GOLD</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Color Legend for Component Categories -->
+            <div class="legend-container" id="colorLegend" aria-label="Component Category Color Legend">
+              <span class="legend-title">Categories:</span>
+              <div class="legend-item"><span class="legend-swatch" style="background:#38bdf8; color:#38bdf8;"></span> ⚡ CPU</div>
+              <div class="legend-item"><span class="legend-swatch" style="background:#fb923c; color:#fb923c;"></span> 🎮 GPU</div>
+              <div class="legend-item"><span class="legend-swatch" style="background:#34d399; color:#34d399;"></span> 🟩 Motherboard</div>
+              <div class="legend-item"><span class="legend-swatch" style="background:#d8b4fe; color:#d8b4fe;"></span> 💾 Memory (RAM)</div>
+              <div class="legend-item"><span class="legend-swatch" style="background:#f472b6; color:#f472b6;"></span> 💽 Storage (M.2/SATA)</div>
+              <div class="legend-item"><span class="legend-swatch" style="background:#fde047; color:#fde047;"></span> 🔌 Power Supply (PSU)</div>
+            </div>
+
+            <!-- Quick Component Chips Toolbar -->
+            <div class="quick-component-chips" role="toolbar" aria-label="Quick Component Selector">
+              <span class="chips-label">Quick Jump:</span>
+              <button class="chip-btn active" data-target="cpu" type="button">
+                <span class="chip-dot cpu"></span>
+                <span>CPU</span>
+              </button>
+              <button class="chip-btn" data-target="gpu" type="button">
+                <span class="chip-dot gpu"></span>
+                <span>GPU</span>
+              </button>
+              <button class="chip-btn" data-target="motherboard" type="button">
+                <span class="chip-dot mobo"></span>
+                <span>Motherboard</span>
+              </button>
+              <button class="chip-btn" data-target="ram" type="button">
+                <span class="chip-dot ram"></span>
+                <span>RAM</span>
+              </button>
+              <button class="chip-btn" data-target="storage" type="button">
+                <span class="chip-dot storage"></span>
+                <span>Storage</span>
+              </button>
+              <button class="chip-btn" data-target="psu" type="button">
+                <span class="chip-dot psu"></span>
+                <span>PSU</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Component Details Inspector Panel -->
+          <aside class="diagram-detail-card" aria-label="Component Specification Panel">
+            <div id="detail-empty-state" class="detail-placeholder hidden">
+              <div class="empty-icon">🔍</div>
+              <h3>Select a Component</h3>
+              <p>Click on any hardware module in the schematic to view its architectural role, technical specs, bus connections, and troubleshooting path.</p>
+              <div class="empty-suggestion">
+                <span>Or jump straight into:</span>
+                <button class="link-btn" data-target="cpu">Central Processing Unit (CPU)</button>
+              </div>
+            </div>
+
+            <div id="detail-active-content">
+              <!-- Dynamically rendered by main.js -->
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         3. Searchable Hardware Library Section with Category Filters
+         ========================================================================= -->
+    <section class="section" id="library">
+      <div class="section-header">
+        <span class="section-tag">Component Encyclopedia</span>
+        <h2 class="section-title">Hardware Library</h2>
+        <p class="section-desc">
+          Search across desktop hardware, architectural specs, and peripheral categories. Filter by subsystem or query exact technologies like DDR5, PCIe Gen5, or AM5.
+        </p>
+      </div>
+
+      <div class="library-filter-toolbar">
+        <!-- Search Box -->
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">🔎</span>
+          <input 
+            type="search" 
+            id="library-search-input" 
+            placeholder="Search components by name, specs, architecture, or tags (e.g. DDR5, PCIe, AM5)..." 
+            aria-label="Search Hardware Library" 
+          />
+          <button id="clear-search-btn" class="clear-btn hidden" type="button" aria-label="Clear Search">&times;</button>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="category-filters" id="category-filter-bar" role="toolbar" aria-label="Hardware Category Filters">
+          <button class="filter-btn active" data-category="ALL" type="button">All (<span id="count-all">6</span>)</button>
+          <button class="filter-btn" data-category="CPU" type="button">⚡ Processors</button>
+          <button class="filter-btn" data-category="GPU" type="button">🎮 Graphics Cards</button>
+          <button class="filter-btn" data-category="Motherboard" type="button">🟩 Motherboards</button>
+          <button class="filter-btn" data-category="RAM" type="button">💾 Memory</button>
+          <button class="filter-btn" data-category="Storage" type="button">💽 Storage (M.2/SATA)</button>
+          <button class="filter-btn" data-category="PSU" type="button">🔌 Power Supplies</button>
+        </div>
+      </div>
+
+      <!-- Hardware Grid Container -->
+      <div class="hardware-grid" id="hardware-grid-container" aria-live="polite">
+        <!-- Dynamically populated by main.js renderHardwareLibrary() -->
+      </div>
+
+      <!-- No Results Fallback Card -->
+      <div id="no-search-results" class="no-results-card hidden">
+        <div class="no-res-icon">🧩</div>
+        <h3>No matching hardware components found</h3>
+        <p>Try searching for a different keyword like "CPU", "DDR5", "PCIe", or clear your active filters.</p>
+        <button id="reset-filters-btn" class="btn btn-secondary btn-sm" type="button">Reset Filters &amp; Search</button>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         4. Connections & Wiring Guide Section
+         ========================================================================= -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <span class="section-tag">System Topology &amp; Wiring</span>
+        <h2 class="section-title">Connections &amp; Bus Pathways</h2>
+        <p class="section-desc">
+          Understand the physical signal and power routing inside your rig. From raw AC conversion to high-speed PCIe 5.0 lane topology and front panel header pinouts.
+        </p>
+      </div>
+
+      <div class="connections-flow-container">
+        <!-- Flow Tabs -->
+        <div class="flow-tabs" id="connection-tabs" role="tablist" aria-label="System Pathway Flows">
+          <button class="flow-tab active" data-flow="power" role="tab" aria-selected="true" type="button">⚡ Power Distribution (+12V Rails)</button>
+          <button class="flow-tab" data-flow="data" role="tab" aria-selected="false" type="button">🚀 High-Speed Data Highway (PCIe / DMI)</button>
+          <button class="flow-tab" data-flow="front-panel" role="tab" aria-selected="false" type="button">🎛️ Front Panel Header (F_PANEL)</button>
+          <button class="flow-tab" data-flow="display" role="tab" aria-selected="false" type="button">🖥️ Display Outputs (GPU vs Mobo)</button>
+        </div>
+
+        <!-- Active Flow Display Card -->
+        <div class="flow-content-card" id="flow-display-card">
+          <!-- Dynamically populated by main.js renderFlowSection() -->
+        </div>
+      </div>
+
+      <!-- Reference Connection Matrix Cards -->
+      <div class="connection-matrix-grid">
+        <div class="matrix-card">
+          <div class="matrix-header">
+            <span class="matrix-icon">🔌</span>
+            <h4>24-Pin ATX Main Power</h4>
+          </div>
+          <p class="matrix-desc">Feeds the motherboard chipset, onboard logic, PCIe mechanical slot power (up to 75W), and DDR5 DIMM subchannels.</p>
+          <div class="matrix-callout tip">
+            <strong>Locking Clip:</strong> Ensure the plastic retention clip fully engages with an audible latch.
+          </div>
+          <ul class="matrix-points">
+            <li>Carries +12V, +5V, +3.3V, and -12V rails</li>
+            <li>Includes PS_ON# green wire for soft power trigger</li>
+          </ul>
+        </div>
+
+        <div class="matrix-card">
+          <div class="matrix-header">
+            <span class="matrix-icon">⚡</span>
+            <h4>8-Pin EPS CPU 12V Power</h4>
+          </div>
+          <p class="matrix-desc">Located at the top-left edge of the motherboard. Dedicated exclusively to supplying high-current 12V DC to the CPU VRMs.</p>
+          <div class="matrix-callout alert">
+            <strong>Keying Warning:</strong> Do not force an 8-Pin PCIe GPU cable into the EPS header—the square/rounded pin keying is opposite!
+          </div>
+          <ul class="matrix-points">
+            <li>Can split into 4+4 pin for older 4-pin motherboards</li>
+            <li>Enthusiast motherboards provide two 8-pin sockets for overclocking</li>
+          </ul>
+        </div>
+
+        <div class="matrix-card">
+          <div class="matrix-header">
+            <span class="matrix-icon">🎮</span>
+            <h4>PCIe 6+2 &amp; 12V-2x6 (16-Pin)</h4>
+          </div>
+          <p class="matrix-desc">High-power auxiliary feeds directly into discrete GPUs for rendering and machine learning workloads.</p>
+          <div class="matrix-callout warning">
+            <strong>Critical Flush Seating:</strong> 12VHPWR / 12V-2x6 cables must be pushed in with ZERO gap between connector shells to prevent thermal issues.
+          </div>
+          <ul class="matrix-points">
+            <li>Standard 8-Pin PCIe supplies up to 150W</li>
+            <li>12V-2x6 delivers up to 600W through 4 sideband sense pins</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. Troubleshooting Section
+         ========================================================================= -->
+    <section class="section" id="troubleshooting">
+      <div class="section-header">
+        <span class="section-tag">Diagnostic Checklist</span>
+        <h2 class="section-title">Systematic Troubleshooting</h2>
+        <p class="section-desc">
+          Step-by-step diagnostic workflows for common PC hardware issues. Resolve black screens, boot loops, thermal throttling, and memory training stalls.
+        </p>
+      </div>
+
+      <div class="troubleshooting-wrapper">
+        <div class="troubleshoot-tabs" id="troubleshoot-tabs" role="tablist" aria-label="Diagnostic Categories">
+          <button class="ts-tab active" data-category="no-post" role="tab" aria-selected="true" type="button">🚨 No POST / Black Screen</button>
+          <button class="ts-tab" data-category="crash" role="tab" aria-selected="false" type="button">💥 Crashes &amp; BSOD</button>
+          <button class="ts-tab" data-category="thermal" role="tab" aria-selected="false" type="button">🔥 Thermal Throttling</button>
+          <button class="ts-tab" data-category="storage" role="tab" aria-selected="false" type="button">💽 Drive Not Detected</button>
+          <button class="ts-tab" data-category="beeps" role="tab" aria-selected="false" type="button">🔊 Q-LED &amp; Beep Codes</button>
+        </div>
+
+        <div class="troubleshoot-detail-box" id="troubleshoot-content-box">
+          <!-- Dynamically populated by main.js renderTroubleshootSection() -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       Component Detail Modal (Mobile & Explicit triggers)
+       ========================================================================= -->
+  <div id="hardware-modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Hardware Component Details">
+    <div class="modal-window">
+      <button id="modal-close-btn" class="modal-close-btn" type="button" aria-label="Close Modal">&times;</button>
+      <div id="modal-body-container">
+        <!-- Dynamically rendered by main.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Footer
+       ========================================================================= -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="logo-text">⚡ ward<span class="highlight">hare</span></div>
+        <p class="footer-tagline">
+          The open-source interactive computer hardware engineering field guide. Designed for builders, gamers, and hardware enthusiasts.
+        </p>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-col">
+          <h5>Quick Nav</h5>
+          <a href="#diagram">Interactive Diagram</a>
+          <a href="#library">Hardware Library</a>
+          <a href="#connections">Wiring Topology</a>
+          <a href="#troubleshooting">Diagnostics</a>
+        </div>
+        <div class="footer-col">
+          <h5>Diagram Modes</h5>
+          <a href="#diagram" onclick="window.setDiagramView && window.setDiagramView('assembled')">Assembled View</a>
+          <a href="#diagram" onclick="window.setDiagramView && window.setDiagramView('exploded')">Exploded View</a>
+          <a href="#diagram" onclick="window.selectComponent && window.selectComponent('cpu')">CPU Architecture</a>
+          <a href="#diagram" onclick="window.selectComponent && window.selectComponent('gpu')">GPU Topology</a>
+        </div>
+        <div class="footer-col">
+          <h5>System Standards</h5>
+          <span class="mono-badge">PCIe 5.0</span>
+          <span class="mono-badge">DDR5 SMT</span>
+          <span class="mono-badge">ATX 3.1 12V-2x6</span>
+          <span class="mono-badge">NVMe 2.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 wardhare PC Architecture Explorer. All hardware trademarks belong to their respective manufacturers.</p>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Engine -->
+  <script src="main.js"></script>
+</body>
+</html>
