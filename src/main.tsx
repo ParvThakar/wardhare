@@ -1,4 +1,4 @@
-import React, { StrictMode, useMemo, useState, useRef, useEffect } from 'react';
+import React, { StrictMode, useMemo, useState, useRef, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   animated,
@@ -836,6 +836,12 @@ function App() {
   const [explorerMode, setExplorerMode] = useState<'3d' | 'exploded' | 'bench'>('3d');
   const [activeFlow, setActiveFlow] = useState<FlowKey>('power');
 
+  // Stable handler for hardware node selection to avoid component remounts
+  const handleSelectPart = useCallback((id: string) => {
+    const found = parts.find((p) => p.id === id);
+    if (found) setSelected(found);
+  }, []);
+
   // React-Spring: Scroll progress microanimation
   const { scrollYProgress } = useScroll();
 
@@ -1090,18 +1096,12 @@ function App() {
               {explorerMode === '3d' ? (
                 <Hardware3DViewer
                   selectedId={selected.id}
-                  onSelectPart={(id) => {
-                    const found = parts.find((p) => p.id === id);
-                    if (found) setSelected(found);
-                  }}
+                  onSelectPart={handleSelectPart}
                 />
               ) : explorerMode === 'exploded' ? (
                 <ReactSpringExplodedStudio
                   selectedId={selected.id}
-                  onSelectPart={(id) => {
-                    const found = parts.find((p) => p.id === id);
-                    if (found) setSelected(found);
-                  }}
+                  onSelectPart={handleSelectPart}
                 />
               ) : (
                 <>
