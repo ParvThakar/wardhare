@@ -145,33 +145,134 @@ function createGpuBackplateTexture(): THREE.CanvasTexture {
   const ctx = canvas.getContext('2d')!;
 
   // Gunmetal brushed aluminum finish
-  ctx.fillStyle = '#10161d';
+  ctx.fillStyle = '#0f1720';
   ctx.fillRect(0, 0, 1024, 512);
 
-  // Geometric armor grooves
-  ctx.strokeStyle = '#1f2e3d';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(20, 20, 984, 472);
+  // Brushed directional grain
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+  for (let y = 0; y < 512; y += 3) {
+    ctx.fillRect(0, y, 1024, 1);
+  }
 
-  // Flow-through honeycomb exhaust vent pattern on the right
-  ctx.fillStyle = '#080d12';
-  for (let x = 680; x < 950; x += 28) {
-    for (let y = 80; y < 440; y += 24) {
+  // Geometric beveled borders and armor lines
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(16, 16, 992, 480);
+
+  // Diagonal chamfer lines
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(340, 16);
+  ctx.lineTo(420, 496);
+  ctx.moveTo(370, 16);
+  ctx.lineTo(450, 496);
+  ctx.stroke();
+
+  // GPU Core retention X-bracket zone (square with 4 mounting screw holes)
+  ctx.fillStyle = '#0b1117';
+  ctx.fillRect(140, 160, 180, 180);
+  ctx.strokeStyle = '#cca74a';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(140, 160, 180, 180);
+
+  // X bracket diagonal lines
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 8;
+  ctx.beginPath();
+  ctx.moveTo(140, 160);
+  ctx.lineTo(320, 340);
+  ctx.moveTo(320, 160);
+  ctx.lineTo(140, 340);
+  ctx.stroke();
+
+  // 4 chrome tension screws
+  ctx.fillStyle = '#cbd5e1';
+  [[155, 175], [305, 175], [155, 325], [305, 325]].forEach(([sx, sy]) => {
+    ctx.beginPath();
+    ctx.arc(sx, sy, 8, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Flow-through ventilation window (honeycomb hex grid on the right)
+  ctx.fillStyle = '#05080c';
+  ctx.fillRect(660, 60, 320, 392);
+  ctx.strokeStyle = '#0284c7';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(660, 60, 320, 392);
+
+  ctx.fillStyle = '#0c1a24';
+  for (let x = 680; x < 960; x += 28) {
+    for (let y = 80; y < 430; y += 24) {
+      const offsetX = ((y / 24) % 2) * 14;
       ctx.beginPath();
-      ctx.arc(x + ((y / 24) % 2) * 14, y, 9, 0, Math.PI * 2);
+      ctx.arc(x + offsetX, y, 9, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  // Laser engraved logo
-  ctx.fillStyle = '#58e5ee';
-  ctx.font = 'bold 36px "DM Mono", monospace';
+  // Laser engraved typography
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 38px "DM Mono", monospace';
   ctx.textAlign = 'left';
-  ctx.fillText('GEFORCE RTX WARDHARE STUDIO', 80, 200);
+  ctx.fillText('GEFORCE RTX', 480, 210);
+
+  ctx.fillStyle = '#58e5ee';
+  ctx.font = 'bold 24px "DM Mono", monospace';
+  ctx.fillText('WARDHARE 4090 OC', 480, 248);
+
   ctx.fillStyle = '#94a3b8';
-  ctx.font = '18px "DM Mono", monospace';
-  ctx.fillText('24GB GDDR6X • 384-BIT • ADA LOVELACE ARCHITECTURE', 80, 240);
-  ctx.fillText('PCIe 5.0 READY • DUAL BIOS • ULTRA OC EDITION', 80, 275);
+  ctx.font = '15px "DM Mono", monospace';
+  ctx.fillText('24GB GDDR6X • 384-BIT • ADA LOVELACE', 480, 285);
+  ctx.fillText('PCIe 5.0 READY • 450W TGP • DUAL BIOS', 480, 310);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+}
+
+function createGpuLogoTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d')!;
+
+  ctx.fillStyle = '#050a0f';
+  ctx.fillRect(0, 0, 512, 128);
+
+  // Glowing side logo
+  ctx.fillStyle = '#58e5ee';
+  ctx.font = 'bold 44px "DM Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('GEFORCE RTX', 256, 75);
+
+  ctx.fillStyle = '#22d3ee';
+  ctx.font = 'bold 16px "DM Mono", monospace';
+  ctx.fillText('WARDHARE ARCHITECTURE', 256, 105);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+}
+
+function createGpuFanHubTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d')!;
+
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, 256, 256);
+
+  ctx.strokeStyle = '#58e5ee';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.arc(128, 128, 110, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#58e5ee';
+  ctx.font = 'bold 96px "DM Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⌬', 128, 128);
 
   const texture = new THREE.CanvasTexture(canvas);
   return texture;
@@ -265,7 +366,7 @@ export const Hardware3DViewer: React.FC<Hardware3DViewerProps> = ({
   const rootGroupRef = useRef<THREE.Group | null>(null);
   const componentsRef = useRef<{ [key: string]: THREE.Group }>({});
   const targetPositionsRef = useRef<{ [key: string]: { assembled: THREE.Vector3; exploded: THREE.Vector3 } }>({});
-  const animatedFansRef = useRef<THREE.Mesh[]>([]);
+  const animatedFansRef = useRef<(THREE.Mesh | THREE.Group)[]>([]);
   const dataBusParticlesRef = useRef<THREE.Points | null>(null);
 
   // Interaction controls
@@ -285,7 +386,7 @@ export const Hardware3DViewer: React.FC<Hardware3DViewerProps> = ({
     () => [
       { id: 'cpu', name: 'CPU Processor', category: 'LGA1700 Core', worldPos: new THREE.Vector3(-1.8, 3.8, -2.5), color: '#6fc3ff' },
       { id: 'cooling', name: 'AIO Liquid Pump', category: '360mm Hydro', worldPos: new THREE.Vector3(-1.8, 8.2, -2.5), color: '#22d3ee' },
-      { id: 'gpu', name: 'RTX Graphics Card', category: 'PCIe 5.0 x16', worldPos: new THREE.Vector3(0.5, 2.5, 7.8), color: '#ff8a3d' },
+      { id: 'gpu', name: 'RTX 4090 GPU', category: 'PCIe 5.0 x16', worldPos: new THREE.Vector3(-0.5, 3.6, 8.5), color: '#ff8a3d' },
       { id: 'ram', name: 'Dual DDR5 Memory', category: '7200 MT/s', worldPos: new THREE.Vector3(4.5, 4.2, -2.5), color: '#b26bff' },
       { id: 'storage', name: 'M.2 NVMe SSD', category: 'Gen 5 x4', worldPos: new THREE.Vector3(-5.5, 2.2, 1.2), color: '#3dffa8' },
       { id: 'motherboard', name: 'ATX Mainboard', category: 'Z790 Chipset', worldPos: new THREE.Vector3(-0.5, -0.6, -1.0), color: '#2ee6b6' },
@@ -366,12 +467,14 @@ export const Hardware3DViewer: React.FC<Hardware3DViewerProps> = ({
     // Registry for parts and animated fans
     const comps: { [key: string]: THREE.Group } = {};
     const targets: { [key: string]: { assembled: THREE.Vector3; exploded: THREE.Vector3 } } = {};
-    const fanMeshes: THREE.Mesh[] = [];
+    const fanMeshes: (THREE.Mesh | THREE.Group)[] = [];
 
     // Shared procedural textures
     const pcbTexture = createPcbTexture();
     const cpuTexture = createCpuTexture();
     const gpuTexture = createGpuBackplateTexture();
+    const gpuLogoTexture = createGpuLogoTexture();
+    const gpuFanHubTexture = createGpuFanHubTexture();
     const ramTexture = createRamTexture();
     const ssdTexture = createSsdTexture();
 
@@ -678,96 +781,218 @@ export const Hardware3DViewer: React.FC<Hardware3DViewerProps> = ({
     rootGroup.add(ramGroup);
 
     // ========================================================================
-    // 5. DISCRETE GRAPHICS CARD (Triple-Fan RTX GPU with Heatpipes & Backplate)
+    // 5. DISCRETE GRAPHICS CARD (Triple-Fan Flagship RTX 4090 / 5090 GPU)
     // ========================================================================
     const gpuGroup = new THREE.Group();
     gpuGroup.userData = { id: 'gpu', name: 'GeForce RTX 4090 GPU' };
 
-    // Metal Backplate
+    // A. CNC-Machined Brushed Aluminum Backplate (Top Rear -Z face)
     const backplate = new THREE.Mesh(
-      new THREE.BoxGeometry(11.8, 0.18, 4.6),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, map: gpuTexture, metalness: 0.85, roughness: 0.25 })
+      new THREE.BoxGeometry(12.6, 2.9, 0.16),
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        map: gpuTexture,
+        metalness: 0.88,
+        roughness: 0.22,
+      })
     );
-    backplate.position.y = 1.1;
+    backplate.position.set(0, 0, -1.35);
     backplate.castShadow = true;
     gpuGroup.add(backplate);
 
-    // Massive Aluminum Fin Stack Heatsink
-    const heatsink = new THREE.Mesh(
-      new THREE.BoxGeometry(11.4, 1.6, 4.4),
-      new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2 })
-    );
-    heatsink.position.y = 0.2;
+    // B. Massive Multi-Tier Aluminum Cooling Fin Stack Heatsink (Core)
+    const heatsinkGeo = new THREE.BoxGeometry(12.2, 2.7, 2.2);
+    const heatsinkMat = new THREE.MeshStandardMaterial({
+      color: 0xa1a1aa,
+      metalness: 0.92,
+      roughness: 0.18,
+    });
+    const heatsink = new THREE.Mesh(heatsinkGeo, heatsinkMat);
+    heatsink.position.set(0, 0, 0);
     gpuGroup.add(heatsink);
 
-    // Copper Heatpipes emerging from the side
-    const pipeMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.95, roughness: 0.15 });
-    for (let p = 0; p < 4; p++) {
-      const hp = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 10.8, 16), pipeMat);
+    // C. 6x Heavy Sinuous Copper Heatpipes Weaving Through Heatsink Core
+    const pipeMat = new THREE.MeshStandardMaterial({
+      color: 0xd97706,
+      metalness: 0.96,
+      roughness: 0.14,
+    });
+    [-1.0, -0.6, -0.2, 0.2, 0.6, 1.0].forEach((py, pi) => {
+      const pz = -0.7 + (pi % 2) * 1.3;
+      const hp = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 12.0, 16), pipeMat);
       hp.rotation.z = Math.PI / 2;
-      hp.position.set(0, 0.15 + (p % 2) * 0.3, -1.8 + Math.floor(p / 2) * 0.4);
+      hp.position.set(0, py, pz);
       gpuGroup.add(hp);
-    }
-
-    // Outer Aerodynamic Shroud
-    const shroud = new THREE.Mesh(
-      new THREE.BoxGeometry(12.0, 0.6, 4.8),
-      new THREE.MeshStandardMaterial({ color: 0x090f15, metalness: 0.75, roughness: 0.3 })
-    );
-    shroud.position.y = -0.7;
-    gpuGroup.add(shroud);
-
-    // Triple Aerodynamic Axial-tech Cooling Fans
-    [-3.5, 0, 3.5].forEach((fx) => {
-      const fanHub = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.8, 0.8, 0.25, 24),
-        new THREE.MeshStandardMaterial({ color: 0x58e5ee, metalness: 0.9, roughness: 0.15 })
-      );
-      fanHub.rotation.x = Math.PI / 2;
-      fanHub.position.set(fx, -0.7, 2.45);
-      gpuGroup.add(fanHub);
-
-      // Translucent fan blades
-      const fBladeGeo = new THREE.BoxGeometry(1.2, 0.05, 0.4);
-      const fBladeMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.2, transparent: true, opacity: 0.85 });
-      for (let b = 0; b < 7; b++) {
-        const blade = new THREE.Mesh(fBladeGeo, fBladeMat);
-        blade.position.set(fx + Math.cos((b / 7) * Math.PI * 2) * 0.85, -0.7, 2.45 + Math.sin((b / 7) * Math.PI * 2) * 0.85);
-        blade.rotation.y = -(b / 7) * Math.PI * 2;
-        gpuGroup.add(blade);
-      }
-
-      fanMeshes.push(fanHub);
     });
 
-    // Side Illuminated Logo Badge
-    const gpuLogo = new THREE.Mesh(
-      new THREE.BoxGeometry(4.2, 0.35, 0.1),
+    // D. Outer Aerospace Shroud with Geometric Armor Facets
+    const shroudMat = new THREE.MeshStandardMaterial({
+      color: 0x090e14,
+      metalness: 0.82,
+      roughness: 0.28,
+    });
+    const shroud = new THREE.Mesh(new THREE.BoxGeometry(12.8, 3.1, 0.45), shroudMat);
+    shroud.position.set(0, 0, 1.35);
+    shroud.castShadow = true;
+    gpuGroup.add(shroud);
+
+    // Shroud Top & Bottom Angular Bevel Bars
+    const accentMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+    const topAccent = new THREE.Mesh(new THREE.BoxGeometry(12.4, 0.25, 0.5), accentMat);
+    topAccent.position.set(0, 1.45, 1.35);
+    gpuGroup.add(topAccent);
+
+    const bottomAccent = new THREE.Mesh(new THREE.BoxGeometry(12.4, 0.25, 0.5), accentMat);
+    bottomAccent.position.set(0, -1.45, 1.35);
+    gpuGroup.add(bottomAccent);
+
+    // E. Triple Recessed Axial-Tech Fans with Real Synchronized Blade Rotation
+    const fanBladeGeo = new THREE.BoxGeometry(0.85, 0.26, 0.04);
+    const fanBladeMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      metalness: 0.5,
+      roughness: 0.25,
+      transparent: true,
+      opacity: 0.94,
+    });
+    const fanHubMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: gpuFanHubTexture,
+      metalness: 0.92,
+      roughness: 0.15,
+    });
+    const fanHaloMat = new THREE.MeshBasicMaterial({ color: 0x58e5ee });
+
+    const fanCenters = [-3.8, 0, 3.8];
+    fanCenters.forEach((fx, fanIdx) => {
+      // 1. Recessed Circular Duct Ring with Cyan Halo on Shroud
+      const haloRing = new THREE.Mesh(new THREE.TorusGeometry(1.48, 0.06, 16, 48), fanHaloMat);
+      haloRing.position.set(fx, 0, 1.58);
+      gpuGroup.add(haloRing);
+
+      // 2. Rotating Fan Assembly Group (Hub + 9 Blades Attached Together)
+      const fanAssembly = new THREE.Group();
+      fanAssembly.position.set(fx, 0, 1.55);
+
+      // Metallic Center Hub with Wardhare Emblem
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.58, 0.18, 28), fanHubMat);
+      hub.rotation.x = Math.PI / 2;
+      fanAssembly.add(hub);
+
+      // 9 Curved Aerodynamic Air-Slice Blades
+      for (let b = 0; b < 9; b++) {
+        const angle = (b / 9) * Math.PI * 2;
+        const blade = new THREE.Mesh(fanBladeGeo, fanBladeMat);
+        blade.position.set(Math.cos(angle) * 0.74, Math.sin(angle) * 0.74, 0);
+        blade.rotation.z = angle + 0.36; // Pitch
+        blade.rotation.y = 0.22;        // Rake
+        fanAssembly.add(blade);
+      }
+
+      // Tag with fan index for counter-rotating center fan
+      fanAssembly.userData = { isGpuFan: true, fanIndex: fanIdx };
+      gpuGroup.add(fanAssembly);
+      fanMeshes.push(fanAssembly as any);
+    });
+
+    // F. Top Edge Illuminated "GEFORCE RTX" ARGB Logo Bar
+    const logoPlate = new THREE.Mesh(
+      new THREE.BoxGeometry(5.2, 0.12, 0.75),
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        map: gpuLogoTexture,
+        roughness: 0.2,
+        metalness: 0.7,
+      })
+    );
+    logoPlate.position.set(0, 1.55, 0.2);
+    gpuGroup.add(logoPlate);
+
+    // Glowing Neon Underglow Strip for Logo Bar
+    const logoGlow = new THREE.Mesh(
+      new THREE.BoxGeometry(5.0, 0.08, 0.1),
       new THREE.MeshBasicMaterial({ color: 0x58e5ee })
     );
-    gpuLogo.position.set(0, 0.6, -2.35);
-    gpuGroup.add(gpuLogo);
+    logoGlow.position.set(0, 1.56, 0.6);
+    gpuGroup.add(logoGlow);
 
-    // Gold PCIe 5.0 x16 Connector Teeth
-    const pcieTeeth = new THREE.Mesh(
-      new THREE.BoxGeometry(5.2, 0.45, 0.16),
+    // G. 16-Pin 12V-2x6 / 12VHPWR Power Receptacle on Top Edge
+    const pwrConnector = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4, 0.5, 0.6),
+      new THREE.MeshStandardMaterial({ color: 0x090d12, metalness: 0.6, roughness: 0.4 })
+    );
+    pwrConnector.position.set(3.8, 1.6, 0);
+    gpuGroup.add(pwrConnector);
+
+    // Tiny Gold Pins inside 16-Pin Power Port
+    const pwrPins = new THREE.Mesh(
+      new THREE.BoxGeometry(1.1, 0.15, 0.35),
       new THREE.MeshStandardMaterial({ color: 0xcca74a, metalness: 0.98, roughness: 0.1 })
     );
-    pcieTeeth.position.set(-1.8, -1.2, -2.35);
+    pwrPins.position.set(3.8, 1.82, 0);
+    gpuGroup.add(pwrPins);
+
+    // H. Dual BIOS Toggle Switch
+    const biosSwitch = new THREE.Mesh(
+      new THREE.BoxGeometry(0.35, 0.2, 0.2),
+      new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95, roughness: 0.1 })
+    );
+    biosSwitch.position.set(-2.5, 1.58, -0.6);
+    gpuGroup.add(biosSwitch);
+
+    // I. Triple-Slot Mirror-Polished Stainless Steel I/O Bracket
+    const bracket = new THREE.Mesh(
+      new THREE.BoxGeometry(0.18, 3.8, 2.9),
+      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.96, roughness: 0.12 })
+    );
+    bracket.position.set(-6.4, 0.3, 0);
+    gpuGroup.add(bracket);
+
+    // DisplayPort 2.1 & HDMI 2.1 Port Sockets on Bracket
+    const portMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
+    for (let p = 0; p < 3; p++) {
+      const dp = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.45, 0.8), portMat);
+      dp.position.set(-6.42, -0.6 + p * 0.7, 0.5);
+      gpuGroup.add(dp);
+    }
+    const hdmi = new THREE.Mesh(
+      new THREE.BoxGeometry(0.22, 0.35, 0.65),
+      new THREE.MeshStandardMaterial({ color: 0xb45309, metalness: 0.9, roughness: 0.2 })
+    );
+    hdmi.position.set(-6.42, 1.4, -0.4);
+    gpuGroup.add(hdmi);
+
+    // J. Gold PCIe 5.0 x16 Connector Interface (Seats directly into Motherboard Slot)
+    const pcbTongue = new THREE.Mesh(
+      new THREE.BoxGeometry(6.6, 0.55, 0.14),
+      new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.4 })
+    );
+    pcbTongue.position.set(-0.6, -1.6, 0);
+    gpuGroup.add(pcbTongue);
+
+    const pcieTeeth = new THREE.Mesh(
+      new THREE.BoxGeometry(6.4, 0.35, 0.18),
+      new THREE.MeshStandardMaterial({ color: 0xcca74a, metalness: 0.98, roughness: 0.1 })
+    );
+    pcieTeeth.position.set(-0.6, -1.65, 0);
     gpuGroup.add(pcieTeeth);
 
-    // Dual-slot Stainless Steel Rear Bracket
-    const bracket = new THREE.Mesh(
-      new THREE.BoxGeometry(0.18, 4.4, 2.2),
-      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.96, roughness: 0.15 })
+    // Key notch gap in PCIe fingers
+    const notchCut = new THREE.Mesh(
+      new THREE.BoxGeometry(0.3, 0.4, 0.22),
+      new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.5 })
     );
-    bracket.position.set(-6.0, 0.2, 0);
-    gpuGroup.add(bracket);
+    notchCut.position.set(-2.4, -1.65, 0);
+    gpuGroup.add(notchCut);
 
     comps['gpu'] = gpuGroup;
     targets['gpu'] = {
-      assembled: new THREE.Vector3(0.5, 1.8, 3.2),
-      exploded: new THREE.Vector3(0.5, 2.5, 9.2),
+      assembled: new THREE.Vector3(-0.5, 2.3, 1.2),
+      exploded: new THREE.Vector3(-0.5, 3.8, 8.8),
     };
     rootGroup.add(gpuGroup);
 
@@ -1040,9 +1265,14 @@ export const Hardware3DViewer: React.FC<Hardware3DViewerProps> = ({
         }
       }
 
-      // 2. Continuous Fan Rotation Motion Graphics
+      // 2. Continuous Fan Rotation Motion Graphics (GPU Counter-Rotation & Radiator Fans)
       for (const fan of animatedFansRef.current) {
-        fan.rotation.z += 0.14;
+        if (fan.userData && fan.userData.isGpuFan) {
+          const dir = fan.userData.fanIndex === 1 ? -1 : 1;
+          fan.rotation.z += 0.12 * dir;
+        } else {
+          fan.rotation.y += 0.14;
+        }
       }
 
       // 3. Optical Data Bus Pulse Particles
